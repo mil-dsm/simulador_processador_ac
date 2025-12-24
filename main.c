@@ -98,13 +98,17 @@ int main(int argc, char *argv[]) {
 		uint16_t original_pc = cpu.regs[PC];
 
 		/* Fetch subcycle */
+        // Falta implementar
 
         /* Decode subcycle */
+        // Falta implementar
 
-		/* Execute subcycle (to be implemented) */
+		/* Execute subcycle */
+        // Falta implementar
         // switch(opcode) { ... }
 
         /* Breakpoint subcycle */
+        // Falta implementar
 
     } while(!isa_halt);
     
