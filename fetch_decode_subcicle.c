@@ -50,7 +50,7 @@ typedef struct {
 int main(int argc, char *argv[]) {
 	/* Check arguments */
 	if(argc < 2) {
-		printf("IMAS expects at least 2 arguments.\n");
+		printf("ISA expects at least 2 arguments.\n");
 		return 1;
 	}
 
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
 		/* Execute subcycle */
         // Falta implementar
         // switch(opcode) { ... }
-        
+
     } while(!isa_halt);
     
     return 0;
