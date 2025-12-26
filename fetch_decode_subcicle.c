@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 
     /* Variável imediato */
     int16_t imm;
-
+    
 	/* Processor running */
     bool isa_halt = false;
     do {
@@ -98,18 +98,30 @@ int main(int argc, char *argv[]) {
 		uint16_t original_pc = cpu.regs[PC];
 
 		/* Fetch subcycle */
-        // Falta implementar
-
+        int16_t instruction = cpu.ram[PC];
+        cpu.regs[PC]++;
+        if(cpu.regs[PC] >= MEM_SIZE) {
+            isa_halt = true;
+            break;
+        }
+        
         /* Decode subcycle */
+        int16_t rd = (instruction >> 12) & 0xF; // Extrai os 4 bits mais significativos
+        int16_t rm = (instruction >> 8) & 0xF;
+        int16_t rn = (instruction >> 4) & 0xF;
+        int16_t opcode = instruction & 0xF; // Extrai os 4 bits menos significativos
+
+        if(instruction == INST_HALT) {
+            isa_halt = true;
+        }
+        
+        /* Breakpoint subcycle */
         // Falta implementar
 
 		/* Execute subcycle */
         // Falta implementar
         // switch(opcode) { ... }
-
-        /* Breakpoint subcycle */
-        // Falta implementar
-
+        
     } while(!isa_halt);
     
     return 0;
