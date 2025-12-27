@@ -95,24 +95,28 @@ int main(int argc, char *argv[]) {
     bool isa_halt = false;
     do {
         /* PC before modifications */
-		uint16_t original_pc = cpu.regs[PC];
+		uint16_t original_pc = cpu->regs[PC];
 
 		/* Fetch subcycle */
-        int16_t instruction = cpu.ram[PC];
-        cpu.regs[PC]++;
-        if(cpu.regs[PC] >= MEM_SIZE) {
+        uint16_t instruction = cpu->ram[cpu->regs[PC]];
+        cpu->regs[PC]++;
+        if(cpu->regs[PC] >= MEM_SIZE) {
             isa_halt = true;
             break;
         }
         
         /* Decode subcycle */
+        // O simulador utiliza uma decodificação fixa dos campos de 4 bits, 
+        // reinterpretando-os na fase de execução conforme a instrução.
         int16_t rd = (instruction >> 12) & 0xF; // Extrai os 4 bits mais significativos
-        int16_t rm = (instruction >> 8) & 0xF;
-        int16_t rn = (instruction >> 4) & 0xF;
+        int16_t rm = (instruction >> 8) & 0xF; // Extrai os 4 bits do meio alto
+        int16_t rn = (instruction >> 4) & 0xF; /// Extrai os 4 bits no maio alto
         int16_t opcode = instruction & 0xF; // Extrai os 4 bits menos significativos
 
+        /* Case INST_HALT */
         if(instruction == INST_HALT) {
             isa_halt = true;
+            continue;
         }
         
         /* Breakpoint subcycle */
