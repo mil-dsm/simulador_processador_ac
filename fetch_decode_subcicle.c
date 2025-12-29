@@ -95,15 +95,15 @@ int main(int argc, char *argv[]) {
     bool isa_halt = false;
     do {
         /* PC before modifications */
-		uint16_t original_pc = cpu->regs[PC];
+		uint16_t original_pc = cpu.regs[PC];
 
 		/* Fetch subcycle */
-        if(cpu->regs[PC] >= MEM_SIZE) {
+        if(cpu.regs[PC] >= MEM_SIZE) {
             isa_halt = true;
             break;
         }
-        uint16_t instruction = cpu->ram[cpu->regs[PC]];
-        cpu->regs[PC]++;
+        uint16_t instruction = cpu.ram[cpu.regs[PC]];
+        cpu.regs[PC]++;
         
         /* Decode subcycle */
         // O simulador utiliza uma decodificação fixa dos campos de 4 bits, 
@@ -124,7 +124,52 @@ int main(int argc, char *argv[]) {
 
 		/* Execute subcycle */
         // Falta implementar
-        // switch(opcode) { ... }
+        switch(opcode) {
+
+            // Operações de memória e pilha
+            case OP_LDR: //Rd = MEM[Rm + #Im]
+
+                int8_t im = rn;
+                uint16_t add = cpu.regs[rm]+im;
+
+                if (add >= MEM_SIZE) {
+                isa_halt = true;   
+                break;
+                }
+                
+                cpu.regs[rd] = cpu.ram[add];;
+                break;
+
+            case OP_STR://MEM[Rm + #Im] = Rn
+
+                int8_t im = rd;
+                uint16_t add = cpu.regs[rm] + im;
+
+                if (add >= MEM_SIZE) {
+                isa_halt = true;   
+                break;
+                }
+
+                cpu.ram[add] = cpu.regs[rn];
+                break;
+
+            case OP_PUSH://SP--; MEM[SP] = Rn
+
+                cpu.regs[SP]--;
+                cpu.ram[cpu.regs[SP]] = cpu.regs[rn];
+                break;
+
+            case OP_POP: //Rd = MEM[SP]; SP++
+
+                cpu.regs[rd] = cpu.ram[cpu.regs[SP]];
+                cpu.regs[SP]++;
+                break;
+
+
+
+
+
+        }
 
     } while(!isa_halt);
     
