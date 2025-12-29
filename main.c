@@ -94,15 +94,15 @@ int main(int argc, char *argv[]) {
     bool isa_halt = false;
     do {
         /* PC before modifications */
-		uint16_t original_pc = cpu->regs[PC];
+		uint16_t original_pc = cpu.regs[PC];
 
 		/* Fetch subcycle */
-        if(cpu->regs[PC] >= MEM_SIZE) {
+        if(cpu.regs[PC] >= MEM_SIZE) {
             isa_halt = true;
             break;
         }
-        uint16_t instruction = cpu->ram[cpu->regs[PC]];
-        cpu->regs[PC]++;
+        uint16_t instruction = cpu.ram[cpu.regs[PC]];
+        cpu.regs[PC]++;
         
         /* Decode subcycle */
         // O simulador utiliza uma decodificação fixa dos campos de 4 bits, 
