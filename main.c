@@ -45,7 +45,6 @@ typedef struct {
 } isa;
 
 /* I/O subcicle */
-// Falta implementar
 
 int main(int argc, char *argv[]) {
 	/* Check arguments */
@@ -120,12 +119,53 @@ int main(int argc, char *argv[]) {
         }
         
         /* Breakpoint subcycle */
-        // Falta implementar
+        
+        /* Execute subcycle */
+        switch(opcode) {
 
-		/* Execute subcycle */
-        // Falta implementar
-        // switch(opcode) { ... }
+            
+            // Operações de memória e pilha
+            case OP_LDR: //Rd = MEM[Rm + #Im]
 
+                int8_t im = rn;
+                uint16_t add = cpu.regs[rm]+im;
+
+                if (add >= MEM_SIZE) {
+                isa_halt = true;   
+                break;
+                }
+                
+                cpu.regs[rd] = cpu.ram[add];;
+                break;
+
+            case OP_STR://MEM[Rm + #Im] = Rn
+
+                int8_t im = rd;
+                uint16_t add = cpu.regs[rm] + im;
+
+                if (add >= MEM_SIZE) {
+                isa_halt = true;   
+                break;
+                }
+
+                cpu.ram[add] = cpu.regs[rn];
+                break;
+
+            case OP_PUSH: //SP--; MEM[SP] = Rn
+                cpu.regs[SP]--;
+                cpu.ram[cpu.regs[SP]] = cpu.regs[rn];
+                break;
+
+            case OP_POP: //Rd = MEM[SP]; SP++
+                cpu.regs[rd] = cpu.ram[cpu.regs[SP]];
+                cpu.regs[SP]++;
+                break;
+
+            default:
+				printf("Invalid instruction %04X!\n", cpu->regs[PC]);
+				isa_halt = true;
+				break;
+        }
     } while(!isa_halt);
     
     return 0;
