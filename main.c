@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
     cpu.regs[PC] = 0x0000; // PC inicial
 
     /* Variável imediato */
-    int16_t imm;
+    int16_t im;
     
 	/* Processor running */
     bool isa_halt = false;
