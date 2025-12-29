@@ -161,10 +161,7 @@ int main(int argc, char *argv[]) {
                 cpu.regs[SP]++;
                 break;
 
-            default:
-				printf("Invalid instruction %04X!\n", cpu->regs[PC]);
-				isa_halt = true;
-				break;
+            
         }
     } while(!isa_halt);
     
