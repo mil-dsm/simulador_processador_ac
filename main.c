@@ -38,13 +38,18 @@
 
 /* Processador ISA */
 typedef struct {
-    int16_t regs[16];        // R0 a R15, incluindo SP e PC
-    uint16_t ram[MEM_SIZE];  // 16KB
-    bool zero;
-    bool carry;
+    uint16_t ram[MEM_SIZE];
+    int16_t regs[16];
+    uint16_t ir;
+    struct {
+        bool zero;
+        bool carry;
+    } flags;
+    bool mem_accessed[MEM_SIZE];
 } isa;
 
 /* I/O subcicle */
+// Falta implementar
 
 int main(int argc, char *argv[]) {
 	/* Check arguments */
@@ -69,7 +74,7 @@ int main(int argc, char *argv[]) {
         }
 	}
 
-    /* Zero ISA memory and registers*/
+    /* Inicializar todos os registradores e memória com 0*/
     isa cpu = {0};
 
     /* Fill ISA memory */
@@ -84,8 +89,8 @@ int main(int argc, char *argv[]) {
     fclose(file);
 
     /* Inicia pc e sp */
-    cpu.regs[SP] = 0x2000; // SP inicial
     cpu.regs[PC] = 0x0000; // PC inicial
+    cpu.regs[SP] = 0x2000; // SP inicial
 
     /* Variável imediato */
     int16_t im;
@@ -101,24 +106,25 @@ int main(int argc, char *argv[]) {
             isa_halt = true;
             break;
         }
-        uint16_t instruction = cpu.ram[cpu.regs[PC]];
+        cpu.ir = cpu.ram[cpu.regs[PC]];
         cpu.regs[PC]++;
         
         /* Decode subcycle */
         // O simulador utiliza uma decodificação fixa dos campos de 4 bits, 
-        // reinterpretando-os na fase de execução conforme a instrução.
-        int16_t rd = (instruction >> 12) & 0xF; // Extrai os 4 bits mais significativos
-        int16_t rm = (instruction >> 8) & 0xF; // Extrai os 4 bits do meio alto
-        int16_t rn = (instruction >> 4) & 0xF; /// Extrai os 4 bits no maio alto
-        int16_t opcode = instruction & 0xF; // Extrai os 4 bits menos significativos
+        // reinterpretando-os na fa se de execução conforme a instrução.
+        int16_t rd = (cpu.ir >> 12) & 0xF; // Extrai os 4 bits mais significativos
+        int16_t rm = (cpu.ir >> 8) & 0xF; // Extrai os 4 bits do meio alto
+        int16_t rn = (cpu.ir >> 4) & 0xF; /// Extrai os 4 bits no maio alto
+        int16_t opcode = cpu.ir & 0xF; // Extrai os 4 bits menos significativos
 
         /* Case INST_HALT */
-        if(instruction == INST_HALT) {
+        if(cpu.ir == INST_HALT) {
             isa_halt = true;
             continue;
         }
         
         /* Breakpoint subcycle */
+        // Falta implementar
         
         /* Execute subcycle */
         switch(opcode) {
@@ -162,11 +168,36 @@ int main(int argc, char *argv[]) {
                 break;
 
             default:
-				printf("Invalid instruction %04X!\n", cpu->regs[PC]);
+				printf("Invalid instruction %04X!\n", cpu.regs[PC]);
 				isa_halt = true;
 				break;
         }
     } while(!isa_halt);
+
+    /* Impressão final do estado dos registradores em notação hexadecimal */
+    printf("\n=== REGISTRADORES ===\n");
+    for(int i = 0; i < 16; i++) {
+        printf("R%d=0x%04hX\n", i, cpu.regs[i]);
+    }
+    /* Impressão final do estado da memória acessada em notação hexadecimal */
+    printf("\n=== MEMÓRIA DE DADOS ===\n");
+    for(uint16_t addr = 0; addr < 0x2000; addr++) {
+        if(cpu.mem_accessed[addr]) {
+            printf("%04X %04X\n", addr, cpu.ram[addr]);
+        }
+    }
+    /* Impressão final do estado da pilha em notação hexadecimal */
+    printf("\n=== PILHA ===\n");
+    uint16_t sp = cpu.regs[SP];
+    if(sp < 0x2000) {
+        for(uint16_t addr = sp; addr < 0x2000; addr++) {
+            printf("%04X %04X\n", addr, cpu.ram[addr]);
+        }
+    }
+    /* Impressão final do estado das flags */
+    printf("\n=== FLAGS ===\n");
+    printf("ZERO = 0x%X\n", cpu.flags.zero);
+    printf("CARRY = 0x%X\n", cpu.flags.carry);
     
     return 0;
 }
