@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
     cpu.regs[SP] = 0x2000; // SP inicial
 
     /* Variável imediato */
-    int16_t im;
+    int16_t imm;
     
 	/* Processor running */
     bool isa_halt = false;
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
         printf("R%d=0x%04hX\n", i, cpu.regs[i]);
     }
     /* Impressão final do estado da memória acessada em notação hexadecimal */
-    printf("\n=== MEMÓRIA DE DADOS ===\n");
+    printf("\n=== MEMORIA DE DADOS ===\n");
     for(uint16_t addr = 0; addr < 0x2000; addr++) {
         if(cpu.mem_accessed[addr]) {
             printf("%04X %04X\n", addr, cpu.ram[addr]);
