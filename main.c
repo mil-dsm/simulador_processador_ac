@@ -125,7 +125,11 @@ int main(int argc, char *argv[]) {
         
         /* Execute subcycle */
         switch(opcode) {
-            
+            case OP_MOV: {
+                int8_t im = (int8_t)((rm << 4) | rn);
+                cpu.regs[rd] = im;
+                break;
+            }
             //soma dos registradores
             case OP_ADD: {
                 int32_t result = cpu.regs[rm] + cpu.regs[rn];
@@ -187,7 +191,11 @@ int main(int argc, char *argv[]) {
             case OP_SHR: {
                 int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] >> imm;
-                cpu.flags.carry = (cpu.regs[rm] >> (imm - 1)) & 1;
+                if (imm == 0) {
+                    cpu.flags.carry = false;
+                } else {
+                    cpu.flags.carry = (cpu.regs[rm] >> (imm - 1)) & 1;
+                }
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
@@ -195,7 +203,11 @@ int main(int argc, char *argv[]) {
             case OP_SHL: {
                 int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] << imm;
-                cpu.flags.carry = (cpu.regs[rm] >> (15 - imm)) & 1;
+                if (imm == 0) {
+                    cpu.flags.carry = false;
+                } else {
+                    cpu.flags.carry = (cpu.regs[rm] >> (imm - 1)) & 1;
+                }
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
