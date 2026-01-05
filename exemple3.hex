@@ -1,0 +1,17 @@
+0000 00A4 MOV R0, #10       // R0 = 0x000A (addr of size)
+0001 3004 MOV R3, #0        // R3 = 0 (sum accumulator)
+0002 1002 LDR R1, [R0, #0]  // R1 = [0x0A] = 5 (loop count)
+0003 0016 ADDI R0, R0, #1   // R0++ (point to next item)
+0004 2002 LDR R2, [R0, #0]  // R2 = [R0] (load value)
+0005 3325 ADD R3, R3, R2    // R3 = R3 + R2 (add to sum)
+0006 1118 SUBI R1, R1, #1   // R1-- (decrement count)
+0007 7FB1 JNE #-5           // If R1 != 0, jump to 0x0003
+0008 1033 STR R3, [R0, #1]  // [R0+1] = R3 (store result)
+0009 FFFF HALT              // Stops CPU!
+000A 0005 size: 5 
+000B 0001 arr0: 1 
+000C 0002 arr1: 2 
+000D 0003 arr2: 3 
+000E 0004 arr3: 4 
+000F 0005 arr4: 5 
+0010 0000 res: 0 
