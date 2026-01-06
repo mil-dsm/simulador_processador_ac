@@ -91,9 +91,6 @@ int main(int argc, char *argv[]) {
     /* Inicia pc e sp */
     cpu.regs[PC] = 0x0000; // PC inicial
     cpu.regs[SP] = 0x2000; // SP inicial
-
-    /* Variável imediato */
-    int16_t imm;
     
 	/* Processor running */
     bool isa_halt = false;
@@ -128,12 +125,19 @@ int main(int argc, char *argv[]) {
         
         /* Execute subcycle */
         switch(opcode) {
+            case OP_MOV: {
+                int8_t im = (int8_t)((rm << 4) | rn);
+                cpu.regs[rd] = im;
+                break;
+            }
             //soma dos registradores
             case OP_ADD: {
                 int32_t result = cpu.regs[rm] + cpu.regs[rn];
                 cpu.regs[rd] = (int16_t) result;
-                if(cpu.flags.carry == (result & 0x10000)) {
+                if((result & 0x10000) != 0) {
                     cpu.flags.carry = true;
+                } else {
+                    cpu.flags.carry = false;
                 }
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
@@ -141,18 +145,19 @@ int main(int argc, char *argv[]) {
             }
             //soma com imediato
             case OP_ADDI: {
-                imm = rn;
+                int8_t imm = rn;
                 int32_t result = cpu.regs[rm] + imm;
                 cpu.regs[rd] = (int16_t) result;
-                if(cpu.flags.carry == (result & 0x10000)) {
+                if((result & 0x10000) != 0) {
                     cpu.flags.carry = true;
-                } 
+                } else {
+                    cpu.flags.carry = false;
+                }
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
-             //subtração dos registradores
+            //subtração dos registradores
             case OP_SUB: {
-
                 int32_t result = cpu.regs[rm] - cpu.regs[rn];
                 cpu.regs[rd] = (int16_t) result;
                 cpu.flags.carry = (cpu.regs[rn] > cpu.regs[rm]);
@@ -161,14 +166,14 @@ int main(int argc, char *argv[]) {
             }
             //subtração com imediato
             case OP_SUBI: {
-                imm = rn;
+                int8_t imm = rn;
                 int32_t result = cpu.regs[rm] - imm;
                 cpu.regs[rd] = (int16_t) result;
                 cpu.flags.carry = (imm > cpu.regs[rm]);   
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
-             //AND entre registradores
+            //AND entre registradores
             case OP_AND: {
                 cpu.regs[rd] = cpu.regs[rm] & cpu.regs[rn];
                 cpu.flags.carry = false;
@@ -184,6 +189,7 @@ int main(int argc, char *argv[]) {
             }
             // mover para a direira (shift right)
             case OP_SHR: {
+                int16_t imm = rn & 0xF;
                 cpu.regs[rm] = cpu.regs[rd] >> imm;
                 cpu.flags.carry = cpu.regs[rd] & 0x1;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
@@ -191,12 +197,12 @@ int main(int argc, char *argv[]) {
             }
             //mover para a esquerda (shift left)
             case OP_SHL: {
+                int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] << imm;
                 cpu.flags.carry = (cpu.regs[rd] & 0x8000) != 0;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
-
-            }  
+            }
             //comparação entre registradores
             case OP_CMP: {
                 int32_t result = cpu.regs[rm] - cpu.regs[rn];
@@ -204,9 +210,8 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = ((int16_t)result == 0);
                 break;
             }
-            
-            // Operações de memória e pilha
 
+            // Operações de memória e pilha
             //Rd = MEM[Rm + #Im] 
             case OP_LDR: {
                 int8_t im = rn;
@@ -242,15 +247,13 @@ int main(int argc, char *argv[]) {
             }
             //Rd = MEM[SP]; SP++
             case OP_POP: {
-        
-            
                 cpu.regs[rd] = cpu.ram[cpu.regs[SP]];
                 cpu.regs[SP]++;
                 break;
             }
 
             default: {
-				printf("Invalid instruction %04X!\n", cpu.regs[PC]);
+				printf("Invalid instruction %04X!\n", cpu.ir);
 				isa_halt = true;
 				break;
             }
