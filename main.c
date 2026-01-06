@@ -141,7 +141,6 @@ int main(int argc, char *argv[]) {
                 }
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
-             
             }
             //soma com imediato
             case OP_ADDI: {
@@ -262,9 +261,13 @@ int main(int argc, char *argv[]) {
 
     /* Impressão final do estado dos registradores em notação hexadecimal */
     printf("\n=== REGISTRADORES ===\n");
-    for(int i = 0; i < 16; i++) {
+    for(int i = 0; i < 14; i++) {
         printf("R%d=0x%04hX\n", i, cpu.regs[i]);
     }
+    printf("SP=0x%04hX\n", i, cpu.regs[SP]);
+    printf("PC=0x%04hX\n", i, original_pc);
+    printf("PC+=0x%04hX\n", i, cpu.regs[PC]);
+
     /* Impressão final do estado da memória acessada em notação hexadecimal */
     printf("\n=== MEMORIA DE DADOS ===\n");
     for(uint16_t addr = 0; addr < 0x2000; addr++) {
