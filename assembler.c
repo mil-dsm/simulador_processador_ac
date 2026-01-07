@@ -1,3 +1,32 @@
+/* Instructions */
+#define OP_JMP   (0x0)
+#define OP_JCOND (0x1)
+#define OP_LDR   (0x2)
+#define OP_STR   (0x3)
+#define OP_MOV   (0x4)
+#define OP_ADD   (0x5)
+#define OP_ADDI  (0x6)
+#define OP_SUB   (0x7)
+#define OP_SUBI  (0x8)
+#define OP_AND   (0x9)
+#define OP_OR    (0xA)
+#define OP_SHR   (0xB)
+#define OP_SHL   (0xC)
+#define OP_CMP   (0xD)
+#define OP_PUSH  (0xE)
+#define OP_POP   (0xF)
+#define INST_HALT (0xFFFF)
+
+/* PC and SP */
+#define SP (14)
+#define PC (15)
+
+/* INPUT AND OUTPUT */
+#define CHAR_IN (0xF000)
+#define CHAR_OUT (0xF001)
+#define INT_IN (0xF002)
+#define INT_OUT (0xF003)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -92,14 +121,6 @@ int main(int argc, char *argv[]) {
 
     /* Tradução das instruções */
     while(fgets(line, sizeof(line), in)) {
-
-        // HALT
-
-        // JMP #Im
-
-        // JEQ #Im
-
-        // JNE #Im
 
         // JLT #Im
 
