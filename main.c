@@ -125,11 +125,23 @@ int main(int argc, char *argv[]) {
         
         /* Execute subcycle */
         switch(opcode) {
+            /* Saltos */
+            // JMP #Im: PC = PC + #Im
+            case OP_JMP:
+                break;
+            
+            // J<cond>
+            case OP_JCOND:
+                break;
+            
+            // MOV: Rd, #Im: Rd = #Im
             case OP_MOV: {
                 int8_t im = (int8_t)((rm << 4) | rn);
                 cpu.regs[rd] = im;
                 break;
             }
+
+            /* Instruções básicas */
             //soma dos registradores
             case OP_ADD: {
                 int32_t result = cpu.regs[rm] + cpu.regs[rn];
@@ -142,6 +154,7 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
+
             //soma com imediato
             case OP_ADDI: {
                 int8_t imm = rn;
@@ -155,6 +168,7 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
+
             //subtração dos registradores
             case OP_SUB: {
                 int32_t result = cpu.regs[rm] - cpu.regs[rn];
@@ -163,6 +177,7 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
+
             //subtração com imediato
             case OP_SUBI: {
                 int8_t imm = rn;
@@ -172,6 +187,7 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
+
             //AND entre registradores
             case OP_AND: {
                 cpu.regs[rd] = cpu.regs[rm] & cpu.regs[rn];
@@ -179,6 +195,7 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
+
             //OR entre registradores
             case OP_OR: {
                 cpu.regs[rd] = cpu.regs[rm] | cpu.regs[rn];
@@ -186,6 +203,7 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
+
             // mover para a direira (shift right)
             case OP_SHR: {
                 int16_t imm = rn & 0xF;
@@ -194,6 +212,7 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
+
             //mover para a esquerda (shift left)
             case OP_SHL: {
                 int16_t imm = rn & 0xF;
@@ -202,6 +221,7 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
+
             //comparação entre registradores
             case OP_CMP: {
                 int32_t result = cpu.regs[rm] - cpu.regs[rn];
@@ -238,12 +258,14 @@ int main(int argc, char *argv[]) {
                 cpu.ram[add] = cpu.regs[rn];
                 break;
             }
+
             //SP--; MEM[SP] = Rn
             case OP_PUSH: {
                 cpu.regs[SP]--;
                 cpu.ram[cpu.regs[SP]] = cpu.regs[rn];
                 break;
             }
+            
             //Rd = MEM[SP]; SP++
             case OP_POP: {
                 cpu.regs[rd] = cpu.ram[cpu.regs[SP]];
