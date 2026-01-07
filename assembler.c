@@ -17,19 +17,10 @@
 #define OP_POP   (0xF)
 #define INST_HALT (0xFFFF)
 
-/* PC and SP */
-#define SP (14)
-#define PC (15)
-
-/* INPUT AND OUTPUT */
-#define CHAR_IN (0xF000)
-#define CHAR_OUT (0xF001)
-#define INT_IN (0xF002)
-#define INT_OUT (0xF003)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 typedef struct label {
     char nome[32];
@@ -118,9 +109,18 @@ int main(int argc, char *argv[]) {
     // O ponteiro in sai do EOF e volta ao inicio do 
     // arquivo de input para começar a tradução
     rewind(in);
+    pc = 0;
 
     /* Tradução das instruções */
     while(fgets(line, sizeof(line), in)) {
+        
+        // Pula linhas vazias
+        if(line[0] == '\n' || line[0] == '\r' || line[0] == ';') {
+            continue;
+        }
+
+        uint16_t instruction = 0;
+        int rd, rm, rn, imm;
 
         // JLT #Im
 
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
         // STR Rn, [Rm, #Im]
 
         // MOV Rd, #Im
-
+    
         // ADD Rd, Rm, Rn
 
         // ADDI Rd, Rm, #Im
@@ -153,6 +153,8 @@ int main(int argc, char *argv[]) {
         // PUSH Rn
 
         // POP Rd
+
+        // HALT
     }
 
     fclose(in);
