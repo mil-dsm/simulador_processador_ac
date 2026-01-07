@@ -286,9 +286,9 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 14; i++) {
         printf("R%d=0x%04hX\n", i, cpu.regs[i]);
     }
-    printf("SP=0x%04hX\n", i, cpu.regs[SP]);
-    printf("PC=0x%04hX\n", i, original_pc);
-    printf("PC+=0x%04hX\n", i, cpu.regs[PC]);
+    printf("SP=0x%04hX\n", cpu.regs[SP]);
+    printf("PC=0x%04hX\n", original_pc);
+    printf("PC+=0x%04hX\n", cpu.regs[PC]);
 
     /* Impressão final do estado da memória acessada em notação hexadecimal */
     printf("\n=== MEMORIA DE DADOS ===\n");
@@ -298,11 +298,13 @@ int main(int argc, char *argv[]) {
         }
     }
     /* Impressão final do estado da pilha em notação hexadecimal */
-    printf("\n=== PILHA ===\n");
-    uint16_t sp = cpu.regs[SP];
-    if(sp < 0x2000) {
-        for(uint16_t addr = sp; addr < 0x2000; addr++) {
-            printf("%04X %04X\n", addr, cpu.ram[addr]);
+    if(cpu.regs[SP] != 0x2000) {
+        printf("\n=== PILHA ===\n");
+        uint16_t sp = cpu.regs[SP];
+        if(sp < 0x2000) {
+            for(uint16_t addr = sp; addr < 0x2000; addr++) {
+                printf("%04X %04X\n", addr, cpu.ram[addr]);
+            }
         }
     }
     /* Impressão final do estado das flags */
