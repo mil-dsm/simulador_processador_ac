@@ -144,6 +144,7 @@ int main(int argc, char *argv[]) {
         /* Execute subcycle */
         switch(opcode) {
             /* Saltos */
+            // Falta implementar
             // JMP #Im: PC = PC + #Im
             case OP_JMP:
                 break;
