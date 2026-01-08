@@ -49,7 +49,25 @@ typedef struct {
 } isa;
 
 /* I/O subcicle */
-// Falta implementar
+void process_output(int16_t value, uint16_t address){
+    if (address == CHAR_OUT){
+        printf("%c", (char)value);
+    } else if (address == INT_OUT){
+        printf("%d", value);
+    }
+    fflush(stdout);
+}
+
+int16_t process_input(uint16_t address){
+    fflush(stdout);
+    if (address == CHAR_IN){
+        return (int16_t)getchar();
+    } else if (address == INT_IN){
+        int temp;
+        if (scanf("%d", &temp) == 1) return (int16_t)temp;
+    }
+    return 0;
+}
 
 int main(int argc, char *argv[]) {
 	/* Check arguments */
@@ -232,16 +250,18 @@ int main(int argc, char *argv[]) {
 
             // Operações de memória e pilha
             //Rd = MEM[Rm + #Im] 
-            case OP_LDR: {
+			case OP_LDR: {
                 int8_t im = rn;
-                uint16_t add = cpu.regs[rm]+im;
-
-                if (add >= MEM_SIZE) {
-                isa_halt = true;   
-                break;
+                uint16_t add = cpu.regs[rm] + im;
+                //Chama a função de Entrada;
+                if (add >= 0xF000){
+                    cpu.regs[rd] = process_input(add);
+                } else if (add < MEM_SIZE){
+                    cpu.regs[rd] = cpu.ram[add];
+                    cpu.mem_accessed[add] = true;
+                } else {
+                    isa_halt = true;
                 }
-                
-                cpu.regs[rd] = cpu.ram[add];
                 break;
             }
 
@@ -249,13 +269,15 @@ int main(int argc, char *argv[]) {
             case OP_STR: {
                 int8_t im = rd;
                 uint16_t add = cpu.regs[rm] + im;
-
-                if (add >= MEM_SIZE) {
-                isa_halt = true;   
-                break;
+                //Chama a função de Saída;
+                if (add >= 0xF000){
+                    process_output(cpu.regs[rn], add);
+                } else if (add < MEM_SIZE){
+                    cpu.ram[add] = cpu.regs[rn];
+                    cpu.mem_accessed[add] = true;
+                } else {
+                    isa_halt = true;
                 }
-
-                cpu.ram[add] = cpu.regs[rn];
                 break;
             }
 
