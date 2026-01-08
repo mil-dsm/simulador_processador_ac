@@ -286,10 +286,7 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 14; i++) {
         printf("R%d=0x%04hX\n", i, cpu.regs[i]);
     }
-    printf("SP=0x%04hX\n", cpu.regs[SP]);
-    printf("PC=0x%04hX\n", original_pc);
     printf("PC+=0x%04hX\n", cpu.regs[PC]);
-
     /* Impressão final do estado da memória acessada em notação hexadecimal */
     printf("\n=== MEMORIA DE DADOS ===\n");
     for(uint16_t addr = 0; addr < 0x2000; addr++) {
@@ -309,8 +306,8 @@ int main(int argc, char *argv[]) {
     }
     /* Impressão final do estado das flags */
     printf("\n=== FLAGS ===\n");
-    printf("ZERO = 0x%X\n", cpu.flags.zero);
-    printf("CARRY = 0x%X\n", cpu.flags.carry);
+    printf("Z = 0x%X\n", cpu.flags.zero);
+    printf("C = 0x%X\n", cpu.flags.carry);
     
     return 0;
 }
