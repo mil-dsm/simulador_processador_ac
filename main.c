@@ -381,8 +381,8 @@ int main(int argc, char *argv[]) {
                 printf("%04X %04X\n", addr, cpu.ram[addr]);
             }
         }
+        printf("\n");
     }
-    printf("\n");
     /* Impressão final do estado das flags */
     printf("Z = 0x%X\n", cpu.flags.zero);
     printf("C = 0x%X\n", cpu.flags.carry);
