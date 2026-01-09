@@ -182,13 +182,13 @@ int main(int argc, char *argv[]) {
                 int16_t imediato;
                 bool deve_saltar = false;
 
-                imediato = ((rd & 0x3) << 8) | (rm << 4) | rn;
+                imediato = (cpu.ir >> 4) & 0x00FF;
 
-                if (imediato & 0x0200) {
-                    imediato |= 0xFC00;
+                if (imediato & 0x80) {   // bit de sinal (8 bits)
+                    imediato |= 0xFF00;
                 }
 
-                int cond = (rd >> 2) & 0x3;
+                int cond = rd;
 
                 if (cond == 0) {                 // JEQ
                     if (cpu.flags.zero)
@@ -197,10 +197,10 @@ int main(int argc, char *argv[]) {
                     if (!cpu.flags.zero)
                         deve_saltar = true;
                 } else if (cond == 2) {          // JLT
-                    if (!cpu.flags.zero && cpu.flags.carry)
+                    if (cpu.flags.carry)
                         deve_saltar = true;
                 } else if (cond == 3) {          // JGE
-                    if (cpu.flags.zero || !cpu.flags.carry)
+                    if (!cpu.flags.carry)
                         deve_saltar = true;
                 }
                 if (deve_saltar) {
