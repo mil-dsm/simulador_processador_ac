@@ -274,12 +274,11 @@ int main(int argc, char *argv[]) {
 
             }
 
-            // Tem erro
-            //comparação entre registradores
+           //comparação entre registradores
             case OP_CMP: {
-                int32_t result = cpu.regs[rm] - cpu.regs[rn];
-                cpu.flags.carry = (cpu.regs[rn] > cpu.regs[rm]);
-                cpu.flags.zero = ((int16_t)result == 0);
+                int16_t result = (int16_t)(cpu.regs[rm] - cpu.regs[rn]);
+                cpu.flags.carry = (cpu.regs[rm] < cpu.regs[rn]);
+                cpu.flags.zero = (result == 0);
                 break;
             }
 
