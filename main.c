@@ -177,7 +177,6 @@ int main(int argc, char *argv[]) {
                 break;
             }
             
-            // Tem erro
             // J<cond>
             case OP_JCOND: {
                 int16_t imediato;
