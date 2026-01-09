@@ -51,19 +51,24 @@ typedef struct {
 /* I/O subcicle */
 void process_output(int16_t value, uint16_t address){
     if (address == CHAR_OUT){
+        printf("OUT => ");
         printf("%c", (char)value);
     } else if (address == INT_OUT){
+        printf("OUT => ");
         printf("%d", value);
     }
+    printf("\n");
     fflush(stdout);
 }
 
 int16_t process_input(uint16_t address){
     fflush(stdout);
     if (address == CHAR_IN){
+        printf("IN => ");
         return (int16_t)getchar();
     } else if (address == INT_IN){
         int temp;
+        printf("IN => ");
         if (scanf("%d", &temp) == 1) return (int16_t)temp;
     }
     return 0;
