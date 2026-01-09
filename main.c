@@ -147,14 +147,14 @@ int main(int argc, char *argv[]) {
             }
             printf("R14 (SP) = 0x%04hX\n", cpu.regs[SP]);
             printf("R15 (PC) = 0x%04hX\n", cpu.regs[PC]);
-            printf("Flags: Z = %d\n, C = %d\n", cpu.flags.zero, cpu.flags.carry);
-            for (uint16_t addr = 0; addr < 0x2000; addr++) {
+            printf("Flags:\n Z = %d\n C = %d\n", cpu.flags.zero, cpu.flags.carry);
+            for (int addr = 0; addr < 0x2000; addr++) {
                 if (cpu.mem_accessed[addr]) {
                     printf("%04X %04X\n", addr, cpu.ram[addr]);
                 }
             }
             if (cpu.regs[SP] != 0x2000) {
-                for (uint16_t addr = 0x1FFF; addr >= cpu.regs[SP]; addr--) {
+                for (int addr = 0x1FFF; addr >= cpu.regs[SP]; addr--) {
                     printf("%04X %04X\n", addr, cpu.ram[addr]);
                 }
             }
@@ -278,7 +278,10 @@ int main(int argc, char *argv[]) {
             case OP_SHR: {
                 int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] >> imm;
-                cpu.flags.carry = (cpu.regs[rm] >> (imm - 1)) & 1;
+                if (imm > 0)
+                    cpu.flags.carry = (cpu.regs[rm] >> (imm - 1)) & 1;
+                else
+                    cpu.flags.carry = false;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
