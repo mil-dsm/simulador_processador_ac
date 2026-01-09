@@ -226,7 +226,7 @@ int main(int argc, char *argv[]) {
             /* Instruções básicas */
             //soma dos registradores
             case OP_ADD: {
-                int32_t result = cpu.regs[rm] + cpu.regs[rn];
+                int32_t result = (int32_t)cpu.regs[rm] + (int32_t)cpu.regs[rn];
                 cpu.regs[rd] = (int16_t) result;
                 cpu.flags.carry = (result > 0xFFFF);
                 cpu.flags.zero = (cpu.regs[rd] == 0);
@@ -236,7 +236,7 @@ int main(int argc, char *argv[]) {
             //soma com imediato
             case OP_ADDI: {
                 int8_t imm = rn;
-                int32_t result = cpu.regs[rm] + imm;
+                int32_t result = (int32_t)cpu.regs[rm] + (int32_t)imm;
                 cpu.regs[rd] = (int16_t) result;
                 cpu.flags.carry = (result > 0xFFFF);
                 cpu.flags.zero = (cpu.regs[rd] == 0);
@@ -245,7 +245,7 @@ int main(int argc, char *argv[]) {
 
             //subtração dos registradores
             case OP_SUB: {
-                int32_t result = cpu.regs[rm] - cpu.regs[rn];
+                int32_t result = (int32_t)cpu.regs[rm] - (int32_t)cpu.regs[rn];
                 cpu.regs[rd] = (int16_t) result;
                 cpu.flags.carry = (cpu.regs[rn] > cpu.regs[rm]);
                 cpu.flags.zero = (cpu.regs[rd] == 0);
@@ -255,9 +255,9 @@ int main(int argc, char *argv[]) {
             //subtração com imediato
             case OP_SUBI: {
                 int8_t imm = rn;
-                int32_t result = cpu.regs[rm] - imm;
-                cpu.regs[rd] = (int16_t) result;
-                cpu.flags.carry = (imm > cpu.regs[rm]);
+                int32_t result = (int32_t)cpu.regs[rm] - (int32_t)imm;
+                cpu.regs[rd] = (int16_t)result;
+                cpu.flags.carry = (result < 0);
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
