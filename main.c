@@ -365,9 +365,9 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 16; i++) {
         printf("R%d=0x%04hX\n", i, cpu.regs[i]);
     }
-    printf("\n");
     /* Impressão final do estado da memória acessada em notação hexadecimal */
     for(uint16_t addr = 0; addr < 0x2000; addr++) {
+        printf("\n");
         if(cpu.mem_accessed[addr]) {
             printf("%04X %04X\n", addr, cpu.ram[addr]);
         }
