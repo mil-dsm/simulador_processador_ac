@@ -187,27 +187,25 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
-            // mover para a direira (shift right)
             case OP_SHR: {
-                int16_t imm = rn & 0xF;
-                cpu.regs[rm] = cpu.regs[rd] >> imm;
-                cpu.flags.carry = cpu.regs[rd] & 0x1;
-                cpu.flags.zero = (cpu.regs[rd] == 0);
+                cpu.regs[rd] = cpu.regs[rm] >> imm;
+                cpu.flags.carry = cpu.regs[rm] >> (imm - 1) & 1;
+                cpu.flags.zero = (cpu.regs[rm] == 0);
                 break;
             }
             //mover para a esquerda (shift left)
             case OP_SHL: {
-                int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] << imm;
-                cpu.flags.carry = (cpu.regs[rd] & 0x8000) != 0;
+                cpu.flags.carry = (cpu.regs[rm] >> (16 - imm)) & 1;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
+
             }
             //comparação entre registradores
             case OP_CMP: {
-                int32_t result = cpu.regs[rm] - cpu.regs[rn];
-                cpu.flags.carry = (cpu.regs[rn] > cpu.regs[rm]);
-                cpu.flags.zero = ((int16_t)result == 0);
+                int16_t result = (int16_t)(cpu.regs[rm] - cpu.regs[rn]);
+                cpu.flags.carry = (cpu.regs[rm] < cpu.regs[rn]);
+                cpu.flags.zero = (result == 0);
                 break;
             }
 
