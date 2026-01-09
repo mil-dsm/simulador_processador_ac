@@ -187,13 +187,12 @@ int main(int argc, char *argv[]) {
                 int16_t imediato;
                 bool deve_saltar = false;
 
-                imediato = (cpu.ir >> 4) & 0x00FF;
+                int cond = (cpu.ir >> 14) & 0x3;
+                imediato = (cpu.ir >> 4) & 0x03FF;
 
-                if (imediato & 0x80) {   // bit de sinal (8 bits)
-                    imediato |= 0xFF00;
+                if(imediato & 0x0200) {   // bit de sinal (8 bits)
+                    imediato |= 0xFC00;
                 }
-
-                int cond = rd;
 
                 if (cond == 0) {                 // JEQ
                     if (cpu.flags.zero)
