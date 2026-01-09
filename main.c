@@ -139,7 +139,28 @@ int main(int argc, char *argv[]) {
         }
         
         /* Breakpoint subcycle */
-        // Falta implementar
+        if (breakpoints[original_pc]){
+            printf("\n--- BREAKPOINT AT 0x%04X ---\n", original_pc);
+            printf("IR: 0x%04X\n", cpu.ir);
+            for (int i = 0; i < 14; i++) {
+                printf("R%d = 0x%04hX\n", i, cpu.regs[i]);
+            }
+            printf("R14 (SP) = 0x%04hX\n", cpu.regs[SP]);
+            printf("R15 (PC) = 0x%04hX\n", cpu.regs[PC]);
+            printf("Flags: Z = %d\n, C = %d\n", cpu.flags.zero, cpu.flags.carry);
+            for (uint16_t addr = 0; addr < 0x2000; addr++) {
+                if (cpu.mem_accessed[addr]) {
+                    printf("%04X %04X\n", addr, cpu.ram[addr]);
+                }
+            }
+            if (cpu.regs[SP] != 0x2000) {
+                for (uint16_t addr = 0x1FFF; addr >= cpu.regs[SP]; addr--) {
+                    printf("%04X %04X\n", addr, cpu.ram[addr]);
+                }
+            }
+            while (getchar() != '\n'); //é pra limpar o buffer;
+            getchar();
+        }
         
         /* Execute subcycle */
         switch(opcode) {
