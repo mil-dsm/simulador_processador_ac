@@ -228,8 +228,8 @@ int main(int argc, char *argv[]) {
             case OP_ADD: {
                 int32_t result = cpu.regs[rm] + cpu.regs[rn];
                 cpu.regs[rd] = (int16_t) result;
-                cpu.flags.zero = (cpu.regs[rd] == 0);
                 cpu.flags.carry = (result > 0xFFFF);
+                cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
 
@@ -257,7 +257,7 @@ int main(int argc, char *argv[]) {
                 int8_t imm = rn;
                 int32_t result = cpu.regs[rm] - imm;
                 cpu.regs[rd] = (int16_t) result;
-                cpu.flags.carry = (imm > cpu.regs[rm]);   
+                cpu.flags.carry = (imm > cpu.regs[rm]);
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
