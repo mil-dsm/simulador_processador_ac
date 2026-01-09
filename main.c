@@ -200,7 +200,6 @@ int main(int argc, char *argv[]) {
             }
 
             /* Instruções básicas */
-
             //soma dos registradores
             case OP_ADD: {
                 int32_t result = cpu.regs[rm] + cpu.regs[rn];
@@ -215,11 +214,7 @@ int main(int argc, char *argv[]) {
                 int8_t imm = rn;
                 int32_t result = cpu.regs[rm] + imm;
                 cpu.regs[rd] = (int16_t) result;
-                if((result & 0x10000) != 0) {
-                    cpu.flags.carry = true;
-                } else {
-                    cpu.flags.carry = false;
-                }
+                cpu.flags.carry = (result > 0xFFFF);
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
@@ -259,12 +254,11 @@ int main(int argc, char *argv[]) {
                 break;
             }
 
-            // Tem erro
             // mover para a direira (shift right)
             case OP_SHR: {
                 int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] >> imm;
-                cpu.flags.carry = cpu.regs[rd] & 0x1;
+                cpu.flags.carry = cpu.regs[rm] >> (imm - 1) & 1;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
@@ -273,12 +267,12 @@ int main(int argc, char *argv[]) {
             case OP_SHL: {
                 int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] << imm;
-                cpu.flags.carry = (cpu.regs[rd] & 0x8000) != 0;
+                if(imm > 0) cpu.flags.carry = (cpu.regs[rm] >> (16 - imm)) & 1;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
+
             }
 
-            // Tem erro
             //comparação entre registradores
             case OP_CMP: {
                 int32_t result = cpu.regs[rm] - cpu.regs[rn];
