@@ -258,24 +258,20 @@ int main(int argc, char *argv[]) {
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
-
-            // Tem erro
-            // mover para a direira (shift right)
-            case OP_SHR: {
-                int16_t imm = rn & 0xF;
+			//mover para a direita (shift right)
+           case OP_SHR: {
                 cpu.regs[rd] = cpu.regs[rm] >> imm;
-                cpu.flags.carry = cpu.regs[rd] & 0x1;
-                cpu.flags.zero = (cpu.regs[rd] == 0);
+                cpu.flags.carry = cpu.regs[rm] >> (imm - 1) & 1;
+                cpu.flags.zero = (cpu.regs[rm] == 0);
                 break;
             }
-
             //mover para a esquerda (shift left)
             case OP_SHL: {
-                int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] << imm;
-                cpu.flags.carry = (cpu.regs[rd] & 0x8000) != 0;
+                cpu.flags.carry = (cpu.regs[rm] >> (16 - imm)) & 1;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
+
             }
 
             // Tem erro
