@@ -375,7 +375,7 @@ int main(int argc, char *argv[]) {
     /* Impressão final do estado da memória acessada em notação hexadecimal */
     for(uint16_t addr = 0; addr < 0x2000; addr++) {
         if(cpu.mem_accessed[addr]) {
-            printf("[0x%04X] = %04X\n", addr, cpu.ram[addr]);
+            printf("[0x%04X] = 0x%04X\n", addr, cpu.ram[addr]);
         }
     }
     /* Impressão final do estado da pilha em notação hexadecimal */
