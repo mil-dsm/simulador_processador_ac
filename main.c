@@ -258,7 +258,7 @@ int main(int argc, char *argv[]) {
             case OP_SHR: {
                 int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] >> imm;
-                cpu.flags.carry = cpu.regs[rm] >> (imm - 1) & 1;
+                cpu.flags.carry = (cpu.regs[rm] >> (imm - 1)) & 1;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
             }
