@@ -372,9 +372,9 @@ int main(int argc, char *argv[]) {
             printf("%04X %04X\n", addr, cpu.ram[addr]);
         }
     }
-    printf("\n");
     /* Impressão final do estado da pilha em notação hexadecimal */
     if(cpu.regs[SP] != 0x2000) {
+        printf("\n");
         uint16_t sp = cpu.regs[SP];
         if(sp < 0x2000) {
             for(uint16_t addr = sp; addr < 0x2000; addr++) {
