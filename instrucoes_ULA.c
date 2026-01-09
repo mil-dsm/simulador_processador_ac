@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
             }
             //comparação entre registradores
             case OP_CMP: {
-                int16_t result = (int16_t){cpu.regs[rm] - cpu.regs[rn]);
+                int16_t result = (int16_t)(cpu.regs[rm] - cpu.regs[rn]);
                 cpu.flags.carry = (cpu.regs[rm] < cpu.regs[rn]);
                 cpu.flags.zero = (result == 0);
                 break;
