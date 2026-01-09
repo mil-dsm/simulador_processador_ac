@@ -264,6 +264,7 @@ int main(int argc, char *argv[]) {
             }
             //mover para a esquerda (shift left)
             case OP_SHL: {
+                int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] << imm;
                 if(imm > 0) cpu.flags.carry = (cpu.regs[rm] >> (16 - imm)) & 1;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
