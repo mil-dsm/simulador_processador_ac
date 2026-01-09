@@ -147,21 +147,16 @@ int main(int argc, char *argv[]) {
             // JMP #Im: PC = PC + #Im
             case OP_JMP: {
                 int16_t imediato = 0;
-
-                /* Passo 1: formar o imediato de 12 bits */
                 imediato = (rd << 8) | (rm << 4) | rn;
-
-                /* Passo 2: extensão de sinal (bit 11) */
                 if (imediato & 0x0800) {   // se o bit 11 for 1
                     imediato |= 0xF000;    // estende o sinal para 16 bits
                 }
-
-                /* Passo 3: atualizar o PC (salto relativo) */
                 cpu.regs[PC] = cpu.regs[PC] + imediato;
 
                 break;
             }
             
+            // Tem erro
             // J<cond>
             case OP_JCOND: {
                 int16_t imediato;
@@ -181,11 +176,9 @@ int main(int argc, char *argv[]) {
                 } else if (cond == 1) {          // JNE
                     if (!cpu.flags.zero)
                         deve_saltar = true;
-                // Tem erro
                 } else if (cond == 2) {          // JLT
                     if (!cpu.flags.zero && cpu.flags.carry)
                         deve_saltar = true;
-                // Tem erro
                 } else if (cond == 3) {          // JGE
                     if (cpu.flags.zero || !cpu.flags.carry)
                         deve_saltar = true;
@@ -195,28 +188,25 @@ int main(int argc, char *argv[]) {
                 }
                 break;
             }
-            
-            // Tem erro
+
             // MOV: Rd, #Im: Rd = #Im
             case OP_MOV: {
-                int8_t im = (int8_t)((rm << 4) | rn);
+                int16_t im = (rm << 4) | rn;
+                if(im & 0x80) {
+                    im |= 0xFF00;
+                }
                 cpu.regs[rd] = im;
                 break;
             }
 
             /* Instruções básicas */
 
-            // Tem erro
             //soma dos registradores
             case OP_ADD: {
                 int32_t result = cpu.regs[rm] + cpu.regs[rn];
                 cpu.regs[rd] = (int16_t) result;
-                if((result & 0x10000) != 0) {
-                    cpu.flags.carry = true;
-                } else {
-                    cpu.flags.carry = false;
-                }
                 cpu.flags.zero = (cpu.regs[rd] == 0);
+                cpu.flags.carry = (result > 0xFFFF);
                 break;
             }
 
@@ -273,7 +263,7 @@ int main(int argc, char *argv[]) {
             // mover para a direira (shift right)
             case OP_SHR: {
                 int16_t imm = rn & 0xF;
-                cpu.regs[rm] = cpu.regs[rd] >> imm;
+                cpu.regs[rd] = cpu.regs[rm] >> imm;
                 cpu.flags.carry = cpu.regs[rd] & 0x1;
                 cpu.flags.zero = (cpu.regs[rd] == 0);
                 break;
