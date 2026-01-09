@@ -1,0 +1,16 @@
+0000 00C4 MOV R0, #var1       // R0 = 0x000C
+0001 1002 LDR R1, [R0, #0]    // R1 = [0x0C] = 0x0A
+0002 2012 LDR R2, [R0, #1]    // R2 = [0x0D] = 0x14
+0003 3022 LDR R3, [R0, #2]    // R3 = [0x0F] = 0x1E
+0004 001E PUSH R1             // [SP - 1] = 0x0A, SP = 0x1FFF
+0005 002E PUSH R2             // [SP - 2] = 0x14, SP = 0x1FFE
+0006 003E PUSH R3             // [SP - 3] = 0x1E, SP = 0x1FFD
+0007 4125 ADD R4, R1, R2      // R4 = 0x1E
+0008 4435 ADD R4, R4, R3      // R4 = 0x3C
+0009 3043 STR R4, [R0, #3]    // [0x0F] = 0x3C
+000A 500F POP R5              // R5 = 0x1E
+000B FFFF HALT                // Stops CPU!
+000C 000A var1: 0x0A          // 10
+000D 0014 var2: 0x14          // 20
+000E 001E var3: 0x1E          // 30
+000F 0000 var4: 0
