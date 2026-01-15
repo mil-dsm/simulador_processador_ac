@@ -1,14 +1,3 @@
-/* Equipe:
-Alice Rodrigues Lima Caetano
-Ana Beatriz Pereira Capistrano
-Ana Caroline Sousa Alves
-Francisco Tiago de Sousa Liberato
-Milena de Sousa Mesquita
-
-O código foi testado várias vezes com os casos de teste do moodle, contudo estávamos usando de base o código do laboratório 3 para fazer
-o simulador desde o lançamento, mais ou menos no dia 25 de dezembro. Como ainda estávamos finalizando até agora, não conseguimos formatar para
-os casos de teste do moodle, mas o código funciona com a leitura de arquivos em um IDE ou terminal normalmente, assim como o professor fez em
-sala. Poderia levar isso em consideração na correção do código? Muito obrigada.*/
 #include <stdio.h>
 #include <stdlib.h> // malloc, free, strtol
 #include <string.h> // memset
@@ -269,7 +258,7 @@ int main(int argc, char *argv[]) {
                 break;
             }
 
-            // mover para a direira (shift right)
+            // mover para a direita (shift right)
             case OP_SHR: {
                 int16_t imm = rn & 0xF;
                 cpu.regs[rd] = cpu.regs[rm] >> imm;
