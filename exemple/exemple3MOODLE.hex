@@ -8,10 +8,11 @@
 0007 7FB1 JNE #-5           // If R1 != 0, jump to 0x0003
 0008 1033 STR R3, [R0, #1]  // [R0+1] = R3 (store result)
 0009 FFFF HALT              // Stops CPU!
-000A 0005 size: 5 
-000B 0001 arr0: 1 
-000C 0002 arr1: 2 
-000D 0003 arr2: 3 
-000E 0004 arr3: 4 
-000F 0005 arr4: 5 
-0010 0000 res: 0 
+000A 0005 size: 5
+000B 0001 arr0: 1
+000C 0002 arr1: 2
+000D 0003 arr2: 3
+000E 0004 arr3: 4
+000F 0005 arr4: 5
+0010 0000 res: 0
+0000 0000

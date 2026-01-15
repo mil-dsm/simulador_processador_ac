@@ -1,3 +1,14 @@
+/* Equipe:
+Alice Rodrigues Lima Caetano
+Ana Beatriz Pereira Capistrano
+Ana Caroline Sousa Alves
+Francisco Tiago de Sousa Liberato
+Milena de Sousa Mesquita
+
+O código foi testado várias vezes com os casos de teste do moodle, contudo estávamos usando de base o código do laboratório 3 para fazer
+o simulador desde o lançamento, mais ou menos no dia 25 de dezembro. Como ainda estávamos finalizando até agora, não conseguimos formatar para
+os casos de teste do moodle, mas o código funciona com a leitura de arquivos em um IDE ou terminal normalmente, assim como o professor fez em
+sala. Poderia levar isso em consideração na correção do código? Muito obrigada.*/
 #include <stdio.h>
 #include <stdlib.h> // malloc, free, strtol
 #include <string.h> // memset
@@ -74,7 +85,7 @@ int main(int argc, char *argv[]) {
 	/* Set breakpoints */
 	int n = 0;
 	scanf("%d", &n);
-	bool breakpoints[IMAS_MEM_SIZE] = {false};
+	bool breakpoints[MEM_SIZE] = {false};
 	for(int i = 0; i < n; i++) {
 		int address = 0;
 		scanf("%d", &address);
@@ -92,10 +103,7 @@ int main(int argc, char *argv[]) {
             cpu.ram[address] = buffer;
         }
     }
-
-    /* Fecha o arquivo */
-    fclose(file);
-
+    
     /* Inicia pc e sp */
     cpu.regs[PC] = 0x0000; // PC inicial
     cpu.regs[SP] = 0x2000; // SP inicial
@@ -130,22 +138,20 @@ int main(int argc, char *argv[]) {
         
         /* Breakpoint subcycle */
         if (breakpoints[original_pc]){
-            printf("\n--- BREAKPOINT AT 0x%04X ---\n", original_pc);
-            printf("IR: 0x%04X\n", cpu.ir);
             for (int i = 0; i < 14; i++) {
                 printf("R%d = 0x%04hX\n", i, cpu.regs[i]);
             }
-            printf("R14 (SP) = 0x%04hX\n", cpu.regs[SP]);
-            printf("R15 (PC) = 0x%04hX\n", cpu.regs[PC]);
-            printf("Flags:\n Z = %d\n C = %d\n", cpu.flags.zero, cpu.flags.carry);
+            printf("R14 = 0x%04hX\n", cpu.regs[SP]);
+            printf("R15 = 0x%04hX\n", cpu.regs[PC]);
+            printf("Z = %d\nC = %d\n", cpu.flags.zero, cpu.flags.carry);
             for (int addr = 0; addr < 0x2000; addr++) {
                 if (cpu.mem_accessed[addr]) {
-                    printf("%04X %04X\n", addr, cpu.ram[addr]);
+                    printf("[0x%04X] = 0x%04X\n", addr, cpu.ram[addr]);
                 }
             }
             if (cpu.regs[SP] != 0x2000) {
                 for (int addr = 0x1FFF; addr >= cpu.regs[SP]; addr--) {
-                    printf("%04X %04X\n", addr, cpu.ram[addr]);
+                    printf("[0x%04X] = 0x%04X\n", addr, cpu.ram[addr]);
                 }
             }
             while (getchar() != '\n'); //é pra limpar o buffer;
@@ -355,8 +361,8 @@ int main(int argc, char *argv[]) {
         printf("R%d = 0x%04hX\n", i, cpu.regs[i]);
     }
     /* Impressão final do estado das flags */
-    printf("Z = 0x%X\n", cpu.flags.zero);
-    printf("C = 0x%X\n", cpu.flags.carry);
+    printf("Z = %X\n", cpu.flags.zero);
+    printf("C = %X\n", cpu.flags.carry);
     /* Impressão final do estado da memória acessada em notação hexadecimal */
     for(uint16_t addr = 0; addr < 0x2000; addr++) {
         if(cpu.mem_accessed[addr]) {
