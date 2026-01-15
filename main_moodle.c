@@ -322,6 +322,26 @@ int main(int argc, char *argv[]) {
 				break;
             }
         }
+        if (breakpoints[original_pc]){
+            for (int i = 0; i < 14; i++) {
+                printf("R%d = 0x%04hX\n", i, cpu.regs[i]);
+            }
+            printf("R14 = 0x%04hX\n", cpu.regs[SP]);
+            printf("R15 = 0x%04hX\n", cpu.regs[PC]);
+            printf("Z = %d\nC = %d\n", cpu.flags.zero, cpu.flags.carry);
+        
+            for (int addr = 0; addr < 0x2000; addr++) {
+                if (cpu.mem_accessed[addr]) {
+                    printf("[0x%04X] = 0x%04X\n", addr, cpu.ram[addr]);
+                }
+            }
+        
+            if (cpu.regs[SP] != 0x2000) {
+                for (int addr = 0x1FFF; addr >= cpu.regs[SP]; addr--) {
+                    printf("[0x%04X] = 0x%04X\n", addr, cpu.ram[addr]);
+                }
+            }
+        }
     } while(!isa_halt);
 
     /* Impressão final do estado dos registradores em notação hexadecimal */
